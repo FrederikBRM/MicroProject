@@ -5,9 +5,17 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
-public class PersonDB {
+import model.Person;
 
+public class PersonDB implements PersonDBIF{
+	private static final String findAllQ = "select id, name, email, phone, birth_date, groups_id FROM persons";
+	private static final String findByIdQ = findAllQ + " where id =?";
+	private static final String updateQ = findByIdQ + "set groups_id";
+	private PreparedStatement findAll;
+	private PreparedStatement findByID;
+	private PreparedStatement update;
 
 
 
@@ -51,5 +59,23 @@ public String findAllQ() throws DataAccessException{
         }
         }
     }
+
+@Override
+public List<Person> findAll() throws DataAccessException {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public Person findById(int id) throws DataAccessException {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+@Override
+public boolean update(Person p) throws DataAccessException {
+	// TODO Auto-generated method stub
+	return false;
+}
 }
 
