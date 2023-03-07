@@ -14,21 +14,26 @@ public class PersonGroupCtrl implements PersonGroupCtrIF {
 	
 	@Override
 	public List<Person> showPersons() throws DataAccessException {
+		personCtrl = new PersonCtrl();
 		return personCtrl.findAll();
 	}
 
 	@Override
 	public Person pickPerson(int id) throws DataAccessException {
-		return personCtrl.findById(id);
+		personCtrl = new PersonCtrl();
+		p = personCtrl.findById(id);
+		return p;
 	}
 
 	@Override
 	public List<Group> showGroups() throws DataAccessException {
+		groupCtrl = new GroupCtrl();
 		return groupCtrl.findAll();
 	}
 
 	@Override
 	public boolean pickNewGroup(int id) throws DataAccessException {
+		groupCtrl = new GroupCtrl();
 		groupCtrl.findById(id);
 		boolean succes = personCtrl.updatePerson(p);
 		return succes;

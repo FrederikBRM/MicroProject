@@ -3,11 +3,16 @@ package controller;
 import java.util.List;
 
 import db.DataAccessException;
+import db.PersonDB;
 import db.PersonDBIF;
 import model.Person;
 
 public class PersonCtrl implements PersonCtrIF {
 	private PersonDBIF personDB;
+	
+	public PersonCtrl() {
+		personDB = (PersonDBIF) new PersonDB();
+	}
 	
 	@Override
 	public List<Person> findAll() throws DataAccessException {

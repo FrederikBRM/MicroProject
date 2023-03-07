@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.PersonGroupCtrIF;
+import controller.PersonGroupCtrl;
 import db.DataAccessException;
 import model.Person;
 
@@ -81,7 +82,7 @@ public class PersonList extends JFrame {
 	
 	private void init() {lstPerson.setCellRenderer(new PersonListCellRenderer());
 //		try {
-		// FIXME	this.pgCtr = new PersonGroupCtr();
+			this.pgCtr = new PersonGroupCtrl();
 //		} catch (HorribleException e) {
 //			JOptionPane.showInternalMessageDialog(null, "Problems initializing the system " + e.getMessage());
 //		}
