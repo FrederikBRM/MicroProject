@@ -11,7 +11,12 @@ public class PersonCtrl implements PersonCtrIF {
 	private PersonDBIF personDB;
 	
 	public PersonCtrl() {
-		personDB = (PersonDBIF) new PersonDB();
+		try {
+			personDB = (PersonDBIF) new PersonDB();
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

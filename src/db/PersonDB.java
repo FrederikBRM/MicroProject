@@ -1,81 +1,110 @@
 package db;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import model.Group;
 import model.Person;
 
-public class PersonDB implements PersonDBIF{
-	private static final String findAllQ = "select id, name, email, phone, birth_date, groups_id FROM persons";
-	private static final String findByIdQ = findAllQ + " where id =?";
-	private static final String updateQ = findByIdQ + "set groups_id";
-	private PreparedStatement findAll;
-	private PreparedStatement findByID;
-	private PreparedStatement update;
+public class PersonDB implements PersonDBIF {
+	private static final String findAllQ =
+			"select id, name, email, phone, birth_date, groups_id from persons";
+	private static final String findByIdQ =
+			findAllQ + " where id = ?";
+	private static final String updateQ = 
+			"update persons set name = ?, email = ?, phone = ? , birth_date = ?, groups_id = ? where id = ?";
+	private PreparedStatement findAll, findById, update;
 
-
-
-public String findAllQ() throws DataAccessException{
-	Connection connection = null;
-	PreparedStatement statement = null;
-	ResultSet resultset = null;
-	
-	try {
-		connection = DriverManager.getConnection("jdbc:sqlserver://%s:%d;databaseName=%s;user=%s;password=%s;encrypt=false");
-		statement = connection.prepareStatement("SELECT * FROM persons");
-		resultset = statement.executeQuery();
-		
-		StringBuilder stringbuilder = new StringBuilder();
-		while (resultset.next()) {
-			int id = resultset.getInt("id");
-			String name = resultset.getString("name");
-			int age = resultset.getInt("age");
-			String email = resultset.getString("email");
-			
-			  stringbuilder.append(id).append(": ").append(name).append(" (").append(age).append(") - ").append(email).append("\n");
-			  
+	public PersonDB() throws DataAccessException {
+		try {
+			findAll = DBConnection.getInstance().getConnection()
+					.prepareStatement(findAllQ);
+			findById = DBConnection.getInstance().getConnection()
+					.prepareStatement(findByIdQ);
+			update = DBConnection.getInstance().getConnection()
+					.prepareStatement(updateQ);
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Could not prepare statement");
 		}
+	}
+	
+	@Override
+	public List<Person> findAll() throws DataAccessException {
+		ResultSet rs;
+		try {
+			rs = findAll.executeQuery();
+			List<Person> res = buildObjects(rs);
+			return res;
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Could not retrieve all persons");
+		}
+	}
 
-        return stringbuilder.toString();
-    } catch (SQLException e) {
-        throw new DataAccessException(e, "Error while accessing the database");
-    } finally {
-        try {
-            if (resultset != null) {
-                resultset.close();
-            }
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            throw new DataAccessException(e, "Error while closing the database resources");
-        }
-        }
-    }
+	@Override
+	public Person findById(int id) throws DataAccessException {
+		try {
+			findById.setInt(1, id);
+			ResultSet rs = findById.executeQuery();
+			Person p = null;
+			if(rs.next()) {
+				p = buildObject(rs);
+			}
+			return p;
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Could not find by id = " + id);
+		}
+	}
 
-@Override
-public List<Person> findAll() throws DataAccessException {
-	// TODO Auto-generated method stub
-	return null;
+	@Override
+	public boolean update(Person p) throws DataAccessException {
+		final int id = p.getId();
+		final String name = p.getName();
+		final String email = p.getEmail();
+		final String phone = p.getPhone();
+		final LocalDate birthDate = p.getBirthDate();
+		final int groupId = p.getGroup().getId();
+		try {
+			//update person set 
+			//name = ?, email = ?, phone = ? , 
+			//birth_date = ?, groups_id = ? where id = ?"
+			update.setString(1, name);
+			update.setString(2, email);
+			update.setString(3, phone);
+			update.setDate(4, java.sql.Date.valueOf(birthDate));
+			update.setInt(5, groupId);
+			update.setInt(6, id);
+			update.executeUpdate();
+			
+			return true;
+		} catch (SQLException e) {
+			throw new DataAccessException(e, "Could not update person where id = " + id);
+		}
+	      
+
+	}
+
+	private Person buildObject(ResultSet rs) throws SQLException {
+		Person p = new Person(
+				rs.getInt("id"),
+				rs.getString("name"),
+				rs.getString("email"),
+				rs.getString("phone"),
+				rs.getDate("birth_date").toLocalDate(),
+				new Group(rs.getInt("groups_id"), null, null)
+				);
+		return p;
+	}
+
+	private List<Person> buildObjects(ResultSet rs) throws SQLException {
+		List<Person> res = new ArrayList<>();
+		while(rs.next()) {
+			res.add(buildObject(rs));
+		}
+		return res;
+	}
+
 }
-
-@Override
-public Person findById(int id) throws DataAccessException {
-	// TODO Auto-generated method stub
-	return null;
-}
-
-@Override
-public boolean update(Person p) throws DataAccessException {
-	// TODO Auto-generated method stub
-	return false;
-}
-}
-
