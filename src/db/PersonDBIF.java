@@ -8,5 +8,5 @@ import model.Person;
 public interface PersonDBIF {
 	List<Person> findAll() throws DataAccessException;
 	Person findById(int id) throws DataAccessException;
-	void update(Person p) throws DataAccessException;
+	boolean update(Person p) throws DataAccessException;
 }

@@ -3,26 +3,25 @@ package controller;
 import java.util.List;
 
 import db.DataAccessException;
+import db.PersonDBIF;
 import model.Person;
 
 public class PersonCtrl implements PersonCtrIF {
-
+	private PersonDBIF personDB;
+	
 	@Override
 	public List<Person> findAll() throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
+		return personDB.findAll();
 	}
 
 	@Override
 	public Person findById(int id) throws DataAccessException {
-		// TODO Auto-generated method stub
-		return null;
+		return personDB.findById(id);
 	}
 
 	@Override
 	public boolean updatePerson(Person p) throws DataAccessException {
-		// TODO Auto-generated method stub
-		return false;
+		return personDB.update(p);
 	}
 
 }
