@@ -13,6 +13,7 @@ public class PersonGroupCtrl implements PersonGroupCtrIF {
 
 	public PersonGroupCtrl() {
 		groupCtrl = new GroupCtrl();
+		personCtrl = new PersonCtrl();
 	}
 	
 	@Override
