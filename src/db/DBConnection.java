@@ -29,7 +29,7 @@ public class DBConnection {
 			System.err.println("Could not load JDBC driver");
 			e.printStackTrace();
 		} catch (SQLException e) {
-			System.err.println("Could not connect to database " + dbName + "@" + serverAddress + ":" + serverPort + " as user " + userName + " using password ******");
+			System.err.println("Could not connect to database " + dbName + "@" + serverAddress + ":" + serverPort + " as user " + userName + " using password Secret01");
 			System.out.println("Connection string was: " + connectionString.substring(0, connectionString.length() - password.length()) + "....");
 			e.printStackTrace();
 		}
