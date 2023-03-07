@@ -12,6 +12,6 @@ public interface PersonCtrIF {
 
 	Person findById(int id) throws DataAccessException;
 
-	void updatePerson(Person p) throws DataAccessException;
+	boolean updatePerson(Person p) throws DataAccessException;
 
 }

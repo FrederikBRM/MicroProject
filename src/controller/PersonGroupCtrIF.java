@@ -15,6 +15,6 @@ public interface PersonGroupCtrIF {
 
 	List<Group> showGroups() throws DataAccessException;
 
-	void pickNewGroup(int gid) throws DataAccessException;
+	boolean pickNewGroup(int gid) throws DataAccessException;
 
 }
