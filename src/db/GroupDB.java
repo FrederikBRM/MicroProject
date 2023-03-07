@@ -13,63 +13,55 @@ public class GroupDB implements GroupDBIF {
 	private static final String selectByIDQ = selectAllQ + " where id =?";
 	private PreparedStatement selectAll;
 	private PreparedStatement selectByID;
-	
-	
+
 	public GroupDB() throws SQLException {
 		selectAll = DBConnection.getInstance().getConnection().prepareStatement(selectAllQ);
 		selectByID = DBConnection.getInstance().getConnection().prepareStatement(selectByIDQ);
 	}
-	
-	
 
+//executes the selectAll prepared statement and returns a list of Group objects built by the buildObjects() method.
 	@Override
 	public List<Group> findAll() throws DataAccessException {
 		try {
 			ResultSet rs = selectAll.executeQuery();
 			List<Group> res = buildObjects(rs);
 			return res;
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			DataAccessException he = new DataAccessException(e, "Couldn't find all");
 			throw he;
 		}
 	}
-	
+
 	private List<Group> buildObjects(ResultSet rs) throws SQLException {
 		// TODO Auto-generated method stub
 		List<Group> res = new ArrayList<>();
-		while(rs.next()) {
+		while (rs.next()) {
 			res.addAll(buildObjects(rs));
-			
+
 		}
-		
+
 		return res;
 	}
-
-
-
+// executes the selectByID prepared statement with a specific group ID and returns the corresponding Group object built by the buildObject() method.
 	@Override
-	public Group findById(int id) throws DataAccessException{
+	public Group findById(int id) throws DataAccessException {
 		try {
 			selectByID.setInt(1, id);
 			ResultSet rs = selectByID.executeQuery();
 			Group g = null;
-			if(rs.next()) {
+			if (rs.next()) {
 				g = buildObject(rs);
 			}
 			return g;
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			throw new DataAccessException(e, "Couldn't find by the id = " + id);
 		}
 	}
-
-
-
+// used to create Group objects from the results of SQL queries.
 	private Group buildObject(ResultSet rs) throws SQLException {
 		// TODO Auto-generated method stub
 		Group g = new Group(rs.getInt("id"), rs.getString("name"), rs.getString("description"));
 		return g;
 	}
-	
-	
-	
+
 }
