@@ -8,29 +8,29 @@ import model.Person;
 
 public class PersonGroupCtrl implements PersonGroupCtrIF {
 	private Person p;
-	private PersonCtrIF pPIF;
-	private GroupCtrIF gPIF;
+	private PersonCtrIF personCtrl;
+	private GroupCtrIF groupCtrl;
 	
 	
 	@Override
 	public List<Person> showPersons() throws DataAccessException {
-		return pPIF.findAll();
+		return personCtrl.findAll();
 	}
 
 	@Override
 	public Person pickPerson(int id) throws DataAccessException {
-		return pPIF.findById(id);
+		return personCtrl.findById(id);
 	}
 
 	@Override
 	public List<Group> showGroups() throws DataAccessException {
-		return gPIF.findAll();
+		return groupCtrl.findAll();
 	}
 
 	@Override
 	public boolean pickNewGroup(int id) throws DataAccessException {
-		gPIF.findById(id);
-		boolean succes = pPIF.updatePerson(p);
+		groupCtrl.findById(id);
+		boolean succes = personCtrl.updatePerson(p);
 		return succes;
 	}
 
